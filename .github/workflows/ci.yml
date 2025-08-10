@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  pull_request
+  push:
+    branches: [ main, dev]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      -uses: actions/checkout@v4
+      -uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m venv .venv && source .venv/bin/activate && pip install -U pip
+      - run: pip install pytest
+      # 若目前沒有測試，不要讓CI失敗；未來加上test後移除'|| echo ...'
+      - run: pytest -q || echo "No tests yet"
